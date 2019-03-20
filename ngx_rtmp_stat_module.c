@@ -817,7 +817,7 @@ ngx_rtmp_stat_handler(ngx_http_request_t *r)
 #ifdef NGX_COMPILER
     NGX_RTMP_STAT_L("<compiler>" NGX_COMPILER "</compiler>\r\n");
 #endif
-    NGX_RTMP_STAT_L("<built>" __DATE__ " " __TIME__ "</built>\r\n");
+    NGX_RTMP_STAT_L("<built> __DATE__   __TIME__ </built>\r\n");
 
     NGX_RTMP_STAT_L("<pid>");
     NGX_RTMP_STAT(nbuf, ngx_snprintf(nbuf, sizeof(nbuf),
