@@ -508,7 +508,7 @@ ngx_rtmp_dash_write_variant_playlist(ngx_rtmp_session_t *s)
     ngx_uint_t                 i, j, k, frame_rate_num, frame_rate_denom;
     ngx_uint_t                 depth_msec, depth_sec;
     ngx_uint_t                 update_period, update_period_msec;
-    ngx_uint_t                 start_time, buffer_time, buffer_time_msec;
+    ngx_uint_t                 buffer_time, buffer_time_msec;
     ngx_uint_t                 presentation_delay, presentation_delay_msec;
     ngx_uint_t                 gcd, par_x, par_y;
     ngx_rtmp_dash_ctx_t       *ctx;
@@ -544,19 +544,11 @@ ngx_rtmp_dash_write_variant_playlist(ngx_rtmp_session_t *s)
         return NGX_ERROR;
     }
 
-    /* availabity and publish time should be relative to peer epoch */
-    start_time = ctx->start_time.sec - (s->peer_epoch/1000);
-    ngx_log_debug4(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
-            "Fixing start_time=%uD %uD epoch=%uD new_start_time=%uD",
-            (uint32_t)ctx->start_time.sec, (uint32_t)ctx->start_time.msec,
-            (uint32_t)s->peer_epoch,
-            (uint32_t)start_time);
-
     /**
      * Availability time must be equal stream start time
      * Cos segments time counting from it
      */
-    ngx_libc_gmtime(start_time, &tm);
+    ngx_libc_gmtime(ctx->start_time.sec, &tm);
 
     *ngx_sprintf(available_time, "%4d-%02d-%02dT%02d:%02d:%02dZ",
              tm.tm_year + 1900, tm.tm_mon + 1,
@@ -845,7 +837,7 @@ ngx_rtmp_dash_write_playlist(ngx_rtmp_session_t *s)
     ngx_uint_t                 i, frame_rate_num, frame_rate_denom;
     ngx_uint_t                 depth_msec, depth_sec;
     ngx_uint_t                 update_period, update_period_msec;
-    ngx_uint_t                 start_time, buffer_time, buffer_time_msec;
+    ngx_uint_t                 buffer_time, buffer_time_msec;
     ngx_uint_t                 presentation_delay, presentation_delay_msec;
     ngx_uint_t                 gcd, par_x, par_y;
     ngx_rtmp_dash_ctx_t       *ctx;
@@ -892,19 +884,11 @@ ngx_rtmp_dash_write_playlist(ngx_rtmp_session_t *s)
         return NGX_ERROR;
     }
 
-    /* availabity and publish time should be relative to peer epoch */
-    start_time = ctx->start_time.sec - (s->peer_epoch/1000);
-    ngx_log_debug4(NGX_LOG_DEBUG_RTMP, s->connection->log, 0,
-            "Fixing start_time=%uD %uD epoch=%uD new_start_time=%uD",
-            (uint32_t)ctx->start_time.sec, (uint32_t)ctx->start_time.msec,
-            (uint32_t)s->peer_epoch,
-            (uint32_t)start_time);
-
     /**
      * Availability time must be equal stream start time
      * Cos segments time counting from it
      */
-    ngx_libc_gmtime(start_time, &tm);
+    ngx_libc_gmtime(ctx->start_time.sec, &tm);
 
     *ngx_sprintf(available_time, "%4d-%02d-%02dT%02d:%02d:%02dZ",
              tm.tm_year + 1900, tm.tm_mon + 1,
