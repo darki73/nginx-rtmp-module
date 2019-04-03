@@ -2039,6 +2039,7 @@ ngx_rtmp_notify_parse_url(ngx_conf_t *cf, ngx_str_t *url)
 {
     ngx_url_t  *u;
     size_t      add;
+    size_t      port;
 
     add = 0;
 
@@ -2049,12 +2050,17 @@ ngx_rtmp_notify_parse_url(ngx_conf_t *cf, ngx_str_t *url)
 
     if (ngx_strncasecmp(url->data, (u_char *) "http://", 7) == 0) {
         add = 7;
+        port = 80;
+    } else if (ngx_strncasecmp(url->data, (u_char *) "https://", 8) == 0) {
+        add = 8;
+        port = 443;
     }
 
     u->url.len = url->len - add;
     u->url.data = url->data + add;
-    u->default_port = 80;
+    u->default_port = port;
     u->uri_part = 1;
+
 
     if (ngx_parse_url(cf->pool, u) != NGX_OK) {
         if (u->err) {
